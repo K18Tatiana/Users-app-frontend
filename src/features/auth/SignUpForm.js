@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ButtonLoading from '../../components/ButtonLoading';
 import ImagePreview from '../../components/ImagePreview';
 import { useCreateUserMutation } from './authApiSlice';
@@ -14,12 +13,11 @@ const SignUpForm = () => {
     const [ createUser, { isLoading } ] = useCreateUserMutation();
 
     const navigate = useNavigate();
-    
-    const code = useSelector(state => state.auth.code);
-    if(!code) return <Navigate to="/signup" />
+
     
     const submit = async data => {
-        await createUser({...data, code}).unwrap();
+        const frontBaseUrl = window.location.origin+"/#";
+        await createUser({...data, frontBaseUrl}).unwrap();
         navigate("/login");
     }
 
@@ -42,6 +40,16 @@ const SignUpForm = () => {
                 <Form.Control
                     placeholder="Enter lastname"
                     {...register("lastName")}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="email">
+                <Form.Label className="mb-2">
+                    Email
+                </Form.Label>
+                <Form.Control
+                    placeholder="Enter email"
+                    {...register("email")}
+                    type="email"
                 />
             </Form.Group>
             <Form.Group className="mb-3" controlId="password">

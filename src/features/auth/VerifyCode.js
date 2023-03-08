@@ -1,50 +1,51 @@
-import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
-import ButtonLoading from '../../components/ButtonLoading';
-import { useLazyCodeVerifyQuery } from './authApiSlice';
-import { addCode } from './authSlice';
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useCodeVerifyQuery } from './authApiSlice';
+import checkmark from '../../assets/images/checkmark.jpg';
+import timesmark from '../../assets/images/timesmark.png';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const VerifyCode = () => {
+    const { code } = useParams();
 
-    const [ code, setCode ] = useState("");
-    const navigate = useNavigate();
+    const { error, isLoading } = useCodeVerifyQuery(code);
 
-    const [ verifyCode, { isLoading }] = useLazyCodeVerifyQuery();
 
-    const dispatch = useDispatch();
+    if(isLoading) return <LoadingScreen />
 
-    const submit = async (e) => {
-        e.preventDefault();
-        await verifyCode(code).unwrap();
-        dispatch(addCode(code));
-        navigate("/signup/form")
-    }
+    console.log(error);
 
-    const email = useSelector(state => state.auth.email);
+    if(error?.response.originalStatus === 404) return(
+        <div>
+            <img 
+                src={timesmark} 
+                alt=""  
+                style={{width: 200, display: "block", margin: "0 auto"}}/>
+            <h2 className="my-4">Backend haven't added the endpoint to verify :(</h2>
+            <p>Go to <Link to="/login">Login</Link></p>
+        </div>
+    )
 
-    if(!email) return <Navigate to="/signup" />
+    if(error?.response?.status === 401) return(
+        <div>
+            <img 
+                src={timesmark} 
+                alt=""  
+                style={{width: 200, display: "block", margin: "0 auto"}}/>
+            <h2 className="my-4">Code not found</h2>
+            <p>Go to <Link to="/login">Login</Link></p>
+        </div>
+    )
+
     return (
-        <Form onSubmit={submit}>
-            <h1 className="my-4">Verification code</h1>
-            <Form.Group className="mb-3" controlId="email">
-                <Form.Label className="mb-2">
-                    We sent you a code to your email <b>{email}</b>. Type the code here
-                </Form.Label>
-                <Form.Control
-                    placeholder="Enter code"
-                    onChange={e => setCode(e.target.value)}
-                    value={code}
-                />
-            </Form.Group>
-            <ButtonLoading 
-                isLoading={isLoading} 
-                type='submit'
-            >
-                Send
-            </ButtonLoading>
-        </Form>
+        <div>
+            <img 
+                src={checkmark} 
+                alt=""  
+                style={{width: 200, display: "block", margin: "0 auto"}}/>
+            <h2 className="my-4">Your email was verified!</h2>
+            <p>Go to <Link to="/login">Login</Link></p>
+        </div>
     );
 };
 

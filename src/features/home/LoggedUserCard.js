@@ -5,13 +5,17 @@ import { useGetLoggedUserQuery } from '../../app/api/apiSlice';
 const LoggedUserCard = () => {
 
     const { data: loggedUser, isLoading } = useGetLoggedUserQuery();
+    // const loggedUser = {}
+    console.log(loggedUser)
 
     if(isLoading) return <></>
-    const joinedDate = new Date(loggedUser.createdAt)
-        .toLocaleDateString('en-US', {day: "numeric", month: 'long', year: 'numeric'});
+    // if(!loggedUser) return <div>There was an error :(</div>
+    const joinedDate = new Date(loggedUser?.createdAt)
+        ?.toLocaleDateString('en-US', {day: "numeric", month: 'long', year: 'numeric'});
 
     return (
         <Card style={{maxWidth: 900}}>
+            
             <Card.Body>
                 <h2 className="mb-4 mt-1">Logged user</h2>
                 <Row>

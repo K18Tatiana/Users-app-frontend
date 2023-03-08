@@ -8,25 +8,19 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { ...credentials }
             }),
-            transformErrorResponse: (response, meta, arg) => ({
-                ...response, notification: "Invalid credentials"
-            })
-        }),
-        emailVerify: builder.mutation({
-            query: email => ({
-                url: '/email_verify',
-                method: 'POST',
-                body: email
-            }),
+            transformErrorResponse: (response) => {
+                if(response?.status === 401){
+                    return { ...response, notification: "Invalid credentials" }
+                } else if (response?.originalStatus === 404){
+                    return { ...response, notification: "This feature has not been created yet!" }
+                }return response;
+            }
         }),
         codeVerify: builder.query({
-            query: code => `/email_verify/${code}`,
+            query: code => `/users/verify/${code}`,
             transformErrorResponse: response => ({
                 response, notification: "Code not found"
             }),
-            transformResponse: response => ({
-                ...response, notification: "Email verified!"
-            })
         }),
         createUser: builder.mutation({
             query: user => ({
@@ -35,8 +29,15 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: user
             }),
             transformResponse: response => ({
-                ...response, notification: "User created!"
-            })
+                ...response, 
+                notification: `An email was sent to ${response.email} with the 
+                                instructions to finish creating your account`
+            }),
+            transformErrorResponse: response => {
+                if(response?.data.message === "llave duplicada viola restricción de unicidad «users_email_key»"){
+                    return {response, notification: "Email already exists!"}
+                } else return response;
+            }
         }),
         passwordVerifyEmail: builder.mutation({
             query: email => ({
@@ -78,8 +79,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useLoginMutation,
-    useEmailVerifyMutation,
-    useLazyCodeVerifyQuery,
+    useCodeVerifyQuery,
     useCreateUserMutation,
     usePasswordVerifyEmailMutation,
     useLazyPasswordVerifyCodeQuery,

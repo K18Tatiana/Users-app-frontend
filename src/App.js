@@ -3,7 +3,6 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import AuthWrapper from './features/auth/AuthWrapper';
 import Login from './features/auth/Login';
-import SignUp from './features/auth/SignUp';
 import VerifyCode from './features/auth/VerifyCode';
 import SignUpForm from './features/auth/SignUpForm';
 import ProtectedRoutes from './components/ProtectedRoutes';
@@ -18,9 +17,8 @@ function App() {
     <Routes>
       <Route element={<AuthWrapper />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signup/verify_code" element={<VerifyCode />} />
-        <Route path="/signup/form" element={<SignUpForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/verify_email/:code" element={<VerifyCode />} />
         <Route path="/password_recovery/email" element={<PasswordRecoveryEmail />} />
         <Route path="/password_recovery/code" element={<PasswordRecoveryCode />} />
         <Route path="/password_recovery/new_password" element={<PasswordRecovery />} />
