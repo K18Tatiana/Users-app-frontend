@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { showNotification } from '../../../app/notification/notificationSlice';
 import ButtonLoading from '../../../components/ButtonLoading';
 import { useChangePasswordMutation } from '../authApiSlice';
@@ -12,6 +12,8 @@ const PasswordRecovery = () => {
     const [pwdConfirmation, setPwdConfirmation] = useState("");
     const [changePassword, { isLoading }] = useChangePasswordMutation();
 
+    const { code } = useParams();
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -21,13 +23,10 @@ const PasswordRecovery = () => {
             return dispatch(showNotification(
                 {message: "passwords are not equal", variant: "danger"}
             ))
+        console.log(code);
         await changePassword({password: pwd, code}).unwrap();
         navigate('/login');
     }
-
-    const code = useSelector(state => state.auth.code)
-
-    if(!code) return <Navigate to="/password_recovery/email" />
 
     return (
         <Form onSubmit={submit}>

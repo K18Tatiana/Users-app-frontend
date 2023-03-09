@@ -52,7 +52,7 @@ const Login = () => {
             <p className="text-muted mt-2">
                 Don't have an account? <Link to="/signup">Sign up</Link>
             </p>
-            {/* <Link to="/password_recovery/email">I forgot my password</Link> */}
+            <Link to="/reset_password/email">I forgot my password</Link>
         </Form>
     );
 };

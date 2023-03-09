@@ -9,11 +9,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: { ...credentials }
             }),
             transformErrorResponse: (response) => {
-                if(response?.status === 401){
+                if (response?.status === 401) {
                     return { ...response, notification: "Invalid credentials" }
-                } else if (response?.originalStatus === 404){
+                } else if (response?.originalStatus === 404) {
                     return { ...response, notification: "This feature has not been created yet!" }
-                }return response;
+                } return response;
             }
         }),
         codeVerify: builder.query({
@@ -29,30 +29,35 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: user
             }),
             transformResponse: response => ({
-                ...response, 
+                ...response,
                 notification: `An email was sent to ${response.email} with the 
                                 instructions to finish creating your account`
             }),
             transformErrorResponse: response => {
-                if(response?.data.message === "llave duplicada viola restricción de unicidad «users_email_key»"){
-                    return {response, notification: "Email already exists!"}
+                if (response?.data.message === "llave duplicada viola restricción de unicidad «users_email_key»") {
+                    return { response, notification: "Email already exists!" }
                 } else return response;
             }
         }),
         passwordVerifyEmail: builder.mutation({
             query: email => ({
-                url: '/password_verify',
+                url: '/users/reset_password',
                 method: 'POST',
                 body: email
             }),
             transformErrorResponse: response => {
-                if(response.status === 404)
+                if (response.status === 401)
                     return {
-                        ...response, 
+                        ...response,
                         notification: "User not found"
                     }
                 return response
-            }
+            },
+            transformResponse: response => ({
+                ...response,
+                notification: `An email was sent to ${response.email} with the 
+                                instructions to finish changing your password`
+            }),
         }),
         passwordVerifyCode: builder.query({
             query: code => `/password_verify/${code}`,
@@ -64,13 +69,21 @@ export const authApiSlice = apiSlice.injectEndpoints({
             })
         }),
         changePassword: builder.mutation({
-            query: password => ({
-                url: '/password_verify/change',
-                method: 'POST',
-                body: password
-            }),
+            query: ({password, code}) => {
+                console.log(password, code);
+                return {
+                    url: `/users/reset_password/${code}`,
+                    method: 'POST',
+                    body: {password}
+                }
+            },
+            // query: (password, code) => ({
+            //     url: `/users/reset_password/${code}`,
+            //     method: 'POST',
+            //     body: password
+            // }),
             transformResponse: res => ({
-                ...res, 
+                ...res,
                 notification: "Password changed! Login with your new password"
             })
         })

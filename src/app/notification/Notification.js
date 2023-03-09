@@ -16,7 +16,7 @@ const Notification = () => {
                     className="d-inline-block m-1 text-light"
                     bg={variant}
                     show={show} 
-                    delay={3000}
+                    delay={5000}
                     onClose={() => dispatch(closeNotification())}  
                     autohide
                 >

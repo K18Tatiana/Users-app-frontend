@@ -8,7 +8,6 @@ import SignUpForm from './features/auth/SignUpForm';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Home from './features/home/Home';
 import PasswordRecoveryEmail from './features/auth/passwordRecovery/PasswordRecoveryEmail';
-import PasswordRecoveryCode from './features/auth/passwordRecovery/PasswordRecoveryCode';
 import PasswordRecovery from './features/auth/passwordRecovery/PasswordRecovery';
 
 function App() {
@@ -19,9 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/verify_email/:code" element={<VerifyCode />} />
-        <Route path="/password_recovery/email" element={<PasswordRecoveryEmail />} />
-        <Route path="/password_recovery/code" element={<PasswordRecoveryCode />} />
-        <Route path="/password_recovery/new_password" element={<PasswordRecovery />} />
+        <Route path="/reset_password/email" element={<PasswordRecoveryEmail />} />
+        <Route path="/reset_password/:code" element={<PasswordRecovery />} />
       </Route>
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<Home />} />

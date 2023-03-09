@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonLoading from '../../../components/ButtonLoading';
 import { usePasswordVerifyEmailMutation } from '../authApiSlice';
-import { addEmail } from '../authSlice';
 
 const PasswordRecoveryEmail = () => {
 
     const [ email, setEmail ] = useState("");
     const [ passwordVerify, { isLoading } ] = usePasswordVerifyEmailMutation();
-
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const verify = async e => {
         e.preventDefault();
-        await passwordVerify({ email }).unwrap();
-        dispatch(addEmail(email));
-        navigate("/password_recovery/code")
+        const frontBaseUrl = window.location.origin+"/#";
+        await passwordVerify({ email, frontBaseUrl }).unwrap();
+        navigate("/login");
     }
 
     return (

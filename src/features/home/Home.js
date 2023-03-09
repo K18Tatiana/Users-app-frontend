@@ -8,7 +8,7 @@ import UserCard from './UserCard';
 
 const Home = () => {
 
-    const { data: loggedUser, isLoading: isLoadingLoggedUser } = useGetLoggedUserQuery();
+    const { data: loggedUser } = useGetLoggedUserQuery();
     const { users = [], isLoading } = useGetAllUsersQuery(undefined, {
         selectFromResult: ({ data }) => ({
             users: data?.filter(user => user.id !== loggedUser?.id)
@@ -16,7 +16,7 @@ const Home = () => {
     });
 
 
-    if (isLoading || isLoadingLoggedUser) return <LoadingScreen />
+    if (isLoading ) return <LoadingScreen />
 
     return (
         <div>
