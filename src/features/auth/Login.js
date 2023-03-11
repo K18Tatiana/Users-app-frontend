@@ -6,6 +6,8 @@ import './login.css';
 import ButtonLoading from '../../components/ButtonLoading';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../../app/localStorage/localStorage.slice';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import { useState } from 'react';
 
 const Login = () => {
 
@@ -15,6 +17,8 @@ const Login = () => {
 
     const { register, handleSubmit } = useForm();
     const dispatch = useDispatch();
+
+    const [ isShowPassword, setIsShowPassword ] = useState( false );
 
     const submit = async credentials => {
         const userData = await login(credentials).unwrap();
@@ -35,13 +39,21 @@ const Login = () => {
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="password">
+            <Form.Group className="mb-3 input-password" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                    type="password"
-                    placeholder="Password"
+                    type={ isShowPassword ? "text" : "password" }
+                    placeholder="Password" 
                     {...register("password")}
+                    style={{paddingRight: 50}}
                 />
+                {
+                    isShowPassword
+                    ?
+                    <AiFillEyeInvisible className='btn-password' onClick={ () => setIsShowPassword(false) } />
+                    :
+                    <AiFillEye className='btn-password' onClick={ () => setIsShowPassword(true) } />
+                }
             </Form.Group>
             <ButtonLoading
                 isLoading={isLoading}

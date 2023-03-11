@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import ButtonLoading from '../../components/ButtonLoading';
 import ImagePreview from '../../components/ImagePreview';
 import { useCreateUserMutation } from './authApiSlice';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
 const SignUpForm = () => {
 
     const { register, handleSubmit } = useForm();
     const [ userImage, setUserImage] = useState("");
     const [ createUser, { isLoading } ] = useCreateUserMutation();
+    const [ isShowPassword, setIsShowPassword ] = useState( false );
 
     const navigate = useNavigate();
 
@@ -52,15 +54,23 @@ const SignUpForm = () => {
                     type="email"
                 />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="password">
+            <Form.Group className="mb-3 input-password" controlId="password">
                 <Form.Label className="mb-2">
                     password
                 </Form.Label>
                 <Form.Control
-                    placeholder="Enter password"
-                    type="password"
+                    type={ isShowPassword ? "text" : "password" }
+                    placeholder="Enter password" 
                     {...register("password")}
+                    style={{paddingRight: 50}}
                 />
+                {
+                    isShowPassword
+                    ?
+                    <AiFillEyeInvisible className='btn-password' onClick={ () => setIsShowPassword(false) } />
+                    :
+                    <AiFillEye className='btn-password' onClick={ () => setIsShowPassword(true) } />
+                }
             </Form.Group>
             <Form.Group className="mb-3" controlId="country">
                 <Form.Label className="mb-2">

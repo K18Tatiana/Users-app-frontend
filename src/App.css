@@ -30,3 +30,16 @@
   height: 100%;
   object-fit: cover;
 }
+
+.input-password {
+  position: relative;
+}
+
+.btn-password {
+  font-size: 1.5rem;
+  position: absolute;
+  color: #000;
+  right: 20px;
+  top: 45px;
+  cursor: pointer;
+}
