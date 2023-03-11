@@ -56,7 +56,7 @@ const SignUpForm = () => {
             </Form.Group>
             <Form.Group className="mb-3 input-password" controlId="password">
                 <Form.Label className="mb-2">
-                    password
+                    Password
                 </Form.Label>
                 <Form.Control
                     type={ isShowPassword ? "text" : "password" }
